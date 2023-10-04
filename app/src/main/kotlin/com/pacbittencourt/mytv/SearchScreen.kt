@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen() {
+fun SearchScreen(modifier: Modifier = Modifier) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
     Column(
-        modifier = Modifier.padding(all = 16.dp)
+        modifier = modifier.padding(all = 16.dp)
     ) {
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
