@@ -6,29 +6,37 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
-import com.pacbittencourt.mytv.navigation.MyTvBottomMenuItem
-import com.pacbittencourt.mytv.navigation.bottomBarDestinations
-import com.pacbittencourt.mytv.navigation.navigateSingleTopTo
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import com.pacbittencourt.mytv.navigation.TopLevelDestination
 
 @Composable
 fun MyTvBottomAppBar(
-    navHostController: NavHostController,
-    currentScreen: MyTvBottomMenuItem
+    onItemClick: (TopLevelDestination) -> Unit,
+    currentDestination: NavDestination?
 ) {
     BottomAppBar {
-        for (item in bottomBarDestinations) {
+        TopLevelDestination.values().forEach { destination ->
+            val selected = currentDestination.isTopLevelDestinationInHierarchy(destination)
             NavigationBarItem(
                 label = {
-                    Text(text = stringResource(item.label))
+                    Text(text = stringResource(destination.label))
                 },
-                selected = currentScreen == item,
+                selected = selected,
                 onClick = {
-                    navHostController.navigateSingleTopTo(item.route)
+                    onItemClick(destination)
                 },
                 icon = {
-                    Icon(imageVector = item.icon, contentDescription = item.contentDesc)
+                    Icon(
+                        imageVector = destination.icon,
+                        contentDescription = destination.contentDesc
+                    )
                 })
         }
     }
 }
+
+private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination): Boolean =
+    this?.hierarchy?.any {
+        it.route?.contains(destination.name, true) ?: false
+    } ?: false

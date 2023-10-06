@@ -7,36 +7,24 @@ import androidx.compose.material.icons.sharp.Tv
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.pacbittencourt.mytv.R
 
-interface MyTvDestination {
-    val route: String
+enum class TopLevelDestination(
+    val icon: ImageVector,
+    val label: Int,
+    val contentDesc: String,
+) {
+    TV_SHOWS(
+        icon = Icons.Sharp.Tv,
+        label = R.string.bottom_menu_tv_shows,
+        contentDesc = "tv shows"
+    ),
+    SEARCH(
+        icon = Icons.Sharp.Search,
+        label = R.string.bottom_menu_search,
+        contentDesc = "search",
+    ),
+    PROFILE(
+        icon = Icons.Sharp.AccountCircle,
+        label = R.string.bottom_menu_profile,
+        contentDesc = "profile"
+    )
 }
-
-interface MyTvBottomMenuItem : MyTvDestination {
-    val icon: ImageVector
-    val label: Int
-    val contentDesc: String
-}
-
-object TvShows : MyTvBottomMenuItem {
-    override val route: String = "tvshows"
-    override val icon: ImageVector = Icons.Sharp.Tv
-    override val label: Int = R.string.bottom_menu_tv_shows
-    override val contentDesc: String = "tv shows"
-}
-
-object Search : MyTvBottomMenuItem {
-    override val route: String = "search"
-    override val icon: ImageVector = Icons.Sharp.Search
-    override val label: Int = R.string.bottom_menu_search
-    override val contentDesc: String = "search"
-}
-
-object Profile : MyTvBottomMenuItem {
-    override val route: String = "profile"
-    override val icon: ImageVector = Icons.Sharp.AccountCircle
-    override val label: Int = R.string.bottom_menu_profile
-    override val contentDesc: String = "profile"
-}
-
-
-val bottomBarDestinations = listOf(TvShows, Search, Profile)
