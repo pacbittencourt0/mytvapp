@@ -1,16 +1,23 @@
 package com.pacbittencourt.mytv.ui.search
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,24 +26,39 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import com.pacbittencourt.mytv.R
+import com.pacbittencourt.mytv.network.model.Show
+import com.pacbittencourt.mytv.network.model.ShowImages
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
-    val searchResult = viewModel.searchResult.collectAsState().value
+    val searchResult by viewModel.searchResult.collectAsState()
+    val keyboardController = LocalSoftwareKeyboardController.current
     Column(
-        modifier = modifier.padding(all = 16.dp)
+        modifier = modifier
+            .fillMaxSize()
+            .padding(all = 16.dp)
     ) {
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
             value = searchQuery,
             trailingIcon = {
                 Icon(imageVector = Icons.Rounded.Search, contentDescription = "search")
@@ -51,13 +73,83 @@ fun SearchScreen(
             singleLine = true,
             keyboardActions = KeyboardActions(onSearch = {
                 viewModel.search(searchQuery)
+                keyboardController?.hide()
             }),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
         )
-        LazyColumn {
-            items(searchResult) {
-                Text(text = it.show.name)
+        when (searchResult) {
+            is SearchUiState.Empty -> Text(text = "No results")
+            is SearchUiState.Idle -> Text(text = "Idle")
+            is SearchUiState.Loading -> Loading()
+            is SearchUiState.Failed -> Text("Failed")
+            is SearchUiState.Success -> SearchResult(searchResult)
+        }
+    }
+}
+
+@Composable
+private fun Loading() {
+    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun SearchResult(searchResult: SearchUiState) {
+    val data = searchResult as SearchUiState.Success
+    LazyColumn {
+        items(data.searchResults) {
+            SearchResultItem(it.show)
+        }
+    }
+}
+
+@Composable
+private fun SearchResultItem(show: Show, onAddShowClick: () -> Unit = {}) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            AsyncImage(
+                modifier = Modifier.width(100.dp),
+                model = show.images?.mediumUrl,
+                placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = "",
+                error = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentScale = ContentScale.FillWidth
+            )
+            Text(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 16.dp),
+                text = show.name
+            )
+            IconButton(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                onClick = {
+                    onAddShowClick()
+                }) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "add")
             }
         }
     }
+}
+
+@Composable
+@Preview(showBackground = true, showSystemUi = true)
+private fun PreviewItem() {
+    SearchResultItem(
+        show = Show(
+            "Some Show",
+            images = ShowImages(
+                "https://static.tvmaze.com/uploads/images/medium_portrait/359/898320.jpg",
+                ""
+            )
+        )
+    )
 }

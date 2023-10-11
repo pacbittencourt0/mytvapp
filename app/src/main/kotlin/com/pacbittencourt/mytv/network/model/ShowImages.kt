@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Show(
-    @SerialName("name")
-    val name: String,
-    @SerialName("image")
-    val images: ShowImages?
+data class ShowImages(
+    @SerialName("medium")
+    val mediumUrl: String,
+    @SerialName("original")
+    val originalUrl: String
 )
