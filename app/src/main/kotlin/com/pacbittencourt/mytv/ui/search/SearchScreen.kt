@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -105,7 +106,12 @@ private fun SearchResult(searchResult: SearchUiState) {
 }
 
 @Composable
-private fun SearchResultItem(show: Show, onAddShowClick: () -> Unit = {}) {
+private fun SearchResultItem(
+    show: Show,
+    isAdded: Boolean = false,
+    onAddShowClick: (Boolean) -> Unit = {}
+) {
+    var isAddedAux by rememberSaveable { mutableStateOf(isAdded) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -129,12 +135,15 @@ private fun SearchResultItem(show: Show, onAddShowClick: () -> Unit = {}) {
                     .padding(start = 16.dp),
                 text = show.name
             )
+            val icon = if (isAddedAux) Icons.Default.Check else Icons.Default.Add
             IconButton(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 onClick = {
-                    onAddShowClick()
-                }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "add")
+                    isAddedAux = !isAddedAux
+                    onAddShowClick(isAddedAux)
+                }
+            ) {
+                Icon(imageVector = icon, contentDescription = "add")
             }
         }
     }
@@ -150,6 +159,7 @@ private fun PreviewItem() {
                 "https://static.tvmaze.com/uploads/images/medium_portrait/359/898320.jpg",
                 ""
             )
-        )
+        ),
+        isAdded = true
     )
 }
