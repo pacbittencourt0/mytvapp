@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pacbittencourt.mytv.core.Result
 import com.pacbittencourt.mytv.core.asResult
+import com.pacbittencourt.mytv.data.model.ShowModel
 import com.pacbittencourt.mytv.data.repository.SearchRepository
-import com.pacbittencourt.mytv.network.model.SearchResult
+import com.pacbittencourt.mytv.data.repository.ShowRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,12 +16,14 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchRepository: SearchRepository
+    private val searchRepository: SearchRepository,
+    private val showRepository: ShowRepository
 ) : ViewModel() {
 
     private val searchQuery: MutableStateFlow<String> = MutableStateFlow("")
@@ -52,10 +55,16 @@ class SearchViewModel @Inject constructor(
     fun search(query: String) {
         searchQuery.value = query
     }
+
+    fun addShowToWatchList(show: ShowModel) {
+        viewModelScope.launch {
+            showRepository.insertShowToWatch(show)
+        }
+    }
 }
 
 sealed interface SearchUiState {
-    data class Success(val searchResults: List<SearchResult> = emptyList()) : SearchUiState
+    data class Success(val searchResults: List<ShowModel> = emptyList()) : SearchUiState
     data object Empty : SearchUiState
     data object Loading : SearchUiState
     data object Idle : SearchUiState

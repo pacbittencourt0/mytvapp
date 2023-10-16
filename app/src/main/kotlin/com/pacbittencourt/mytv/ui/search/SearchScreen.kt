@@ -1,5 +1,6 @@
 package com.pacbittencourt.mytv.ui.search
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -39,8 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.pacbittencourt.mytv.R
-import com.pacbittencourt.mytv.network.model.Show
-import com.pacbittencourt.mytv.network.model.ShowImages
+import com.pacbittencourt.mytv.data.model.ShowModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -83,7 +84,9 @@ fun SearchScreen(
             is SearchUiState.Idle -> Text(text = "Idle")
             is SearchUiState.Loading -> Loading()
             is SearchUiState.Failed -> Text("Failed")
-            is SearchUiState.Success -> SearchResult(searchResult)
+            is SearchUiState.Success -> SearchResult(
+                searchResult = searchResult
+            ) { show -> viewModel.addShowToWatchList(show) }
         }
     }
 }
@@ -95,23 +98,27 @@ private fun Loading() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun SearchResult(searchResult: SearchUiState) {
+private fun SearchResult(searchResult: SearchUiState, onAddShowClick: (ShowModel) -> Unit) {
     val data = searchResult as SearchUiState.Success
     LazyColumn {
-        items(data.searchResults) {
-            SearchResultItem(it.show)
+        items(items = data.searchResults, key = { it.id }) {
+            Row(Modifier.animateItemPlacement()) {
+                SearchResultItem(
+                    show = it,
+                    onAddShowClick = onAddShowClick
+                )
+            }
         }
     }
 }
 
 @Composable
 private fun SearchResultItem(
-    show: Show,
-    isAdded: Boolean = false,
-    onAddShowClick: (Boolean) -> Unit = {}
+    show: ShowModel,
+    onAddShowClick: (ShowModel) -> Unit = {}
 ) {
-    var isAddedAux by rememberSaveable { mutableStateOf(isAdded) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -123,7 +130,7 @@ private fun SearchResultItem(
         ) {
             AsyncImage(
                 modifier = Modifier.width(100.dp),
-                model = show.images?.mediumUrl,
+                model = show.imageMediumUrl,
                 placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = "",
                 error = painterResource(id = R.drawable.ic_launcher_foreground),
@@ -135,12 +142,14 @@ private fun SearchResultItem(
                     .padding(start = 16.dp),
                 text = show.name
             )
+            var isAddedAux by remember { mutableStateOf(show.isAdded) }
             val icon = if (isAddedAux) Icons.Default.Check else Icons.Default.Add
             IconButton(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 onClick = {
-                    isAddedAux = !isAddedAux
-                    onAddShowClick(isAddedAux)
+                    show.isAdded = !show.isAdded
+                    isAddedAux = show.isAdded
+                    onAddShowClick(show)
                 }
             ) {
                 Icon(imageVector = icon, contentDescription = "add")
@@ -153,13 +162,6 @@ private fun SearchResultItem(
 @Preview(showBackground = true, showSystemUi = true)
 private fun PreviewItem() {
     SearchResultItem(
-        show = Show(
-            "Some Show",
-            images = ShowImages(
-                "https://static.tvmaze.com/uploads/images/medium_portrait/359/898320.jpg",
-                ""
-            )
-        ),
-        isAdded = true
+        show = ShowModel(1, "Show", "url", isAdded = false),
     )
 }

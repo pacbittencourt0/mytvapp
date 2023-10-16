@@ -2,6 +2,8 @@ package com.pacbittencourt.mytv.data.di
 
 import com.pacbittencourt.mytv.data.repository.SearchRepository
 import com.pacbittencourt.mytv.data.repository.SearchRepositoryImpl
+import com.pacbittencourt.mytv.data.repository.ShowRepository
+import com.pacbittencourt.mytv.data.repository.ShowRepositoryDefault
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,4 +17,9 @@ interface DataModule {
     fun bindsSearchRepository(
         searchRepositoryImpl: SearchRepositoryImpl
     ): SearchRepository
+
+    @Binds
+    fun bindsShowRepository(
+        repository: ShowRepositoryDefault
+    ): ShowRepository
 }

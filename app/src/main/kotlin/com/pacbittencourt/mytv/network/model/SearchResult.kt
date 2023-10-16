@@ -8,5 +8,5 @@ data class SearchResult(
     @SerialName("score")
     val score: Double,
     @SerialName("show")
-    val show: Show
+    val show: ShowNetwork
 )

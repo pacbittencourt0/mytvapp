@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
     id("kotlinx-serialization")
-    kotlin("kapt")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -52,10 +52,6 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
-
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
@@ -70,7 +66,7 @@ dependencies {
 
     implementation("androidx.tracing:tracing-ktx:1.1.0")
 
-    implementation("androidx.navigation:navigation-compose:2.7.3")
+    implementation("androidx.navigation:navigation-compose:2.7.4")
 
     val ktorVersion = "2.3.3"
     implementation("io.ktor:ktor-client-android:$ktorVersion")
@@ -79,9 +75,14 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
     implementation("org.slf4j:slf4j-android:1.7.36")
 
+    val roomVersion = "2.5.2"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    implementation("com.google.dagger:hilt-android:2.47")
-    kapt("com.google.dagger:hilt-android-compiler:2.47")
+    implementation("com.google.dagger:hilt-android:2.48")
+    ksp("com.google.dagger:hilt-android-compiler:2.48")
 
     implementation("io.coil-kt:coil-compose:2.4.0")
 
