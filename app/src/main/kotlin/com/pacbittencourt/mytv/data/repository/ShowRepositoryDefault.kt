@@ -30,4 +30,9 @@ class ShowRepositoryDefault @Inject constructor(
     override suspend fun getShowById(id: Int): ShowEntity? {
         return showDao.getShowById(id)
     }
+
+    override suspend fun removeShowFromWatch(id: Int) {
+        val show = showDao.getShowById(id)
+        show?.let { showDao.deleteShow(show) }
+    }
 }

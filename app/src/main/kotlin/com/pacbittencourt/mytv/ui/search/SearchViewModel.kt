@@ -56,9 +56,13 @@ class SearchViewModel @Inject constructor(
         searchQuery.value = query
     }
 
-    fun addShowToWatchList(show: ShowModel) {
+    fun handleShowInWatchList(show: ShowModel) {
         viewModelScope.launch {
-            showRepository.insertShowToWatch(show)
+            if (show.isAdded) {
+                showRepository.removeShowFromWatch(show.id)
+            } else {
+                showRepository.insertShowToWatch(show)
+            }
         }
     }
 }

@@ -86,7 +86,7 @@ fun SearchScreen(
             is SearchUiState.Failed -> Text("Failed")
             is SearchUiState.Success -> SearchResult(
                 searchResult = searchResult
-            ) { show -> viewModel.addShowToWatchList(show) }
+            ) { show -> viewModel.handleShowInWatchList(show) }
         }
     }
 }
@@ -147,9 +147,9 @@ private fun SearchResultItem(
             IconButton(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 onClick = {
+                    onAddShowClick(show)
                     show.isAdded = !show.isAdded
                     isAddedAux = show.isAdded
-                    onAddShowClick(show)
                 }
             ) {
                 Icon(imageVector = icon, contentDescription = "add")
