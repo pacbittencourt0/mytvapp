@@ -8,9 +8,13 @@ import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(
-    private val searchApi: SearchApi
+    private val searchApi: SearchApi,
+    private val showRepository: ShowRepository
 ) : SearchRepository {
     override suspend fun searchShow(query: String): Flow<List<ShowModel>> {
-        return flowOf(searchApi.searchShow(query).map { result -> result.show.toModel() })
+        return flowOf(searchApi.searchShow(query).map { result ->
+            val showEntity = showRepository.getShowById(result.show.id)
+            result.show.toModel(showEntity != null)
+        })
     }
 }

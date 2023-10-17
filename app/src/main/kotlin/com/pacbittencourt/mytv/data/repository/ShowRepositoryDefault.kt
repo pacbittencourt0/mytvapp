@@ -26,4 +26,8 @@ class ShowRepositoryDefault @Inject constructor(
             }
         }
     }
+
+    override suspend fun getShowById(id: Int): ShowEntity? {
+        return showDao.getShowById(id)
+    }
 }

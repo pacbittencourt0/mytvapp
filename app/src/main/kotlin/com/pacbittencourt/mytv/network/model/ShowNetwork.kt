@@ -14,9 +14,9 @@ data class ShowNetwork(
     val images: ShowImages?
 )
 
-fun ShowNetwork.toModel() = ShowModel(
+fun ShowNetwork.toModel(isAdded: Boolean = false) = ShowModel(
     id = id,
     name = name,
     imageMediumUrl = images?.mediumUrl ?: "",
-    isAdded = false
+    isAdded = isAdded
 )
