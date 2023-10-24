@@ -36,7 +36,8 @@ class SearchViewModel @Inject constructor(
                         is Result.Error -> SearchUiState.Failed
                         is Result.Loading -> SearchUiState.Loading
                         is Result.Success -> {
-                            if (it.data.isEmpty()) SearchUiState.Empty
+                            if (it.data.isEmpty())
+                                SearchUiState.Empty
                             else
                                 SearchUiState.Success(it.data)
 
