@@ -16,7 +16,7 @@ fun MyTvBottomAppBar(
     currentDestination: NavDestination?
 ) {
     BottomAppBar {
-        TopLevelDestination.values().forEach { destination ->
+        TopLevelDestination.entries.forEach { destination ->
             val selected = currentDestination.isTopLevelDestinationInHierarchy(destination)
             NavigationBarItem(
                 label = {

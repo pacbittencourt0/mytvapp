@@ -2,6 +2,7 @@ package com.pacbittencourt.mytv.database.di
 
 import com.pacbittencourt.mytv.database.MyTvDatabase
 import com.pacbittencourt.mytv.database.dao.EpisodeDao
+import com.pacbittencourt.mytv.database.dao.NextDao
 import com.pacbittencourt.mytv.database.dao.ShowDao
 import dagger.Module
 import dagger.Provides
@@ -21,4 +22,9 @@ object DaoModule {
     fun providesEpisodeDao(
         database: MyTvDatabase
     ): EpisodeDao = database.episodeDao()
+
+    @Provides
+    fun providesNextDao(
+        database: MyTvDatabase
+    ): NextDao = database.nextDao()
 }
