@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.pacbittencourt.mytv.R
-import com.pacbittencourt.mytv.database.model.NextEntity
+import com.pacbittencourt.mytv.data.model.NextEpisodeModel
 
 @Composable
 fun EpisodesScreen(
@@ -34,7 +34,7 @@ fun EpisodesScreen(
 ) {
     val showsResult by viewModel.showsResult.collectAsState()
     Column {
-        when(showsResult) {
+        when (showsResult) {
             ShowsUiState.Empty -> {}
             ShowsUiState.Failed -> {}
             ShowsUiState.Loading -> {}
@@ -59,7 +59,7 @@ private fun ShowsResult(showsResult: ShowsUiState.Success) {
 @Preview
 @Composable
 private fun NextEpisodeItem(
-    episode: NextEntity = NextEntity(1,2),
+    nextEpisode: NextEpisodeModel = NextEpisodeModel("Show Name", 1, 2, "Episode Name", ""),
     watchedShowClick: () -> Unit = {}
 ) {
     Card(
@@ -73,7 +73,7 @@ private fun NextEpisodeItem(
         ) {
             AsyncImage(
                 modifier = Modifier.width(100.dp),
-                model = "show.imageMediumUrl",
+                model = nextEpisode.image,
                 placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = "",
                 error = painterResource(id = R.drawable.ic_launcher_foreground),
@@ -84,9 +84,9 @@ private fun NextEpisodeItem(
                     .weight(1f)
                     .padding(start = 16.dp)
             ) {
-                Text(text = "${episode.showId}")
-                Text(text = "${episode.episodeId}")
-                Text(text = "3x10")
+                Text(modifier = Modifier.padding(bottom = 8.dp), text = nextEpisode.showName)
+                Text(text = "${nextEpisode.season}x${nextEpisode.episodeInSeason}")
+                Text(text = nextEpisode.episodeName)
             }
             IconButton(
                 modifier = Modifier.padding(horizontal = 8.dp),

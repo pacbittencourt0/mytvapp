@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pacbittencourt.mytv.core.Result
 import com.pacbittencourt.mytv.core.asResult
-import com.pacbittencourt.mytv.database.dao.NextDao
-import com.pacbittencourt.mytv.database.model.NextEntity
+import com.pacbittencourt.mytv.data.model.NextEpisodeModel
+import com.pacbittencourt.mytv.domain.GetNextEpisodesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,11 +15,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EpisodesViewModel @Inject constructor(
-    nextDao: NextDao
+    nextEpisodesUseCase: GetNextEpisodesUseCase
 ) : ViewModel() {
 
-
-    val showsResult: StateFlow<ShowsUiState> = nextDao.getAll()
+    val showsResult: StateFlow<ShowsUiState> = nextEpisodesUseCase()
         .asResult()
         .map {
             when (it) {
@@ -42,7 +41,7 @@ class EpisodesViewModel @Inject constructor(
 
 
 sealed interface ShowsUiState {
-    data class Success(val result: List<NextEntity> = emptyList()) : ShowsUiState
+    data class Success(val result: List<NextEpisodeModel> = emptyList()) : ShowsUiState
     data object Loading : ShowsUiState
     data object Empty : ShowsUiState
     data object Failed : ShowsUiState
