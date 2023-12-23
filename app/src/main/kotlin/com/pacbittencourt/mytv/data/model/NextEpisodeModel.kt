@@ -6,4 +6,6 @@ data class NextEpisodeModel(
     val episodeInSeason: Int,
     val episodeName: String,
     val image: String,
+    val showId: Int,
+    val episodeId: Int,
 )

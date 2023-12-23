@@ -26,7 +26,9 @@ class NextEpisodeRepositoryDefault @Inject constructor(
                             season = epi.season,
                             episodeInSeason = epi.episodeInSeason,
                             episodeName = epi.name,
-                            image = show.imageMediumUrl
+                            image = show.imageMediumUrl,
+                            showId = show.id,
+                            episodeId = epi.id
                         )
                     )
                 }

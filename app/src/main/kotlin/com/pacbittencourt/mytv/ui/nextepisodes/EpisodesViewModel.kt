@@ -6,16 +6,19 @@ import com.pacbittencourt.mytv.core.Result
 import com.pacbittencourt.mytv.core.asResult
 import com.pacbittencourt.mytv.data.model.NextEpisodeModel
 import com.pacbittencourt.mytv.domain.GetNextEpisodesUseCase
+import com.pacbittencourt.mytv.domain.MarkEpisodeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class EpisodesViewModel @Inject constructor(
-    nextEpisodesUseCase: GetNextEpisodesUseCase
+    nextEpisodesUseCase: GetNextEpisodesUseCase,
+    private val markEpisodeUseCase: MarkEpisodeUseCase
 ) : ViewModel() {
 
     val showsResult: StateFlow<ShowsUiState> = nextEpisodesUseCase()
@@ -37,6 +40,13 @@ class EpisodesViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = ShowsUiState.Loading
         )
+
+
+    fun markEpisodeAsWatched(showId: Int, episodeId: Int) {
+        viewModelScope.launch {
+            markEpisodeUseCase(showId, episodeId)
+        }
+    }
 }
 
 

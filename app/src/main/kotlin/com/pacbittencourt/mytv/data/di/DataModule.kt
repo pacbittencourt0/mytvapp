@@ -1,5 +1,7 @@
 package com.pacbittencourt.mytv.data.di
 
+import com.pacbittencourt.mytv.data.repository.EpisodeRepository
+import com.pacbittencourt.mytv.data.repository.EpisodeRepositoryDefault
 import com.pacbittencourt.mytv.data.repository.NextEpisodeRepository
 import com.pacbittencourt.mytv.data.repository.NextEpisodeRepositoryDefault
 import com.pacbittencourt.mytv.data.repository.SearchRepository
@@ -29,4 +31,9 @@ interface DataModule {
     fun bindsNextEpisodeRepository(
         repository: NextEpisodeRepositoryDefault
     ): NextEpisodeRepository
+
+    @Binds
+    fun bindsEpisodeRepository(
+        repository: EpisodeRepositoryDefault
+    ): EpisodeRepository
 }

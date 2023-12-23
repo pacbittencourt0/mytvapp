@@ -1,6 +1,9 @@
 package com.pacbittencourt.mytv.ui.nextepisodes
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,19 +41,24 @@ fun EpisodesScreen(
             ShowsUiState.Empty -> {}
             ShowsUiState.Failed -> {}
             ShowsUiState.Loading -> {}
-            is ShowsUiState.Success -> ShowsResult(showsResult as ShowsUiState.Success)
+            is ShowsUiState.Success -> {
+                ShowsResult(showsResult as ShowsUiState.Success) { showId, episodeId ->
+                    viewModel.markEpisodeAsWatched(showId, episodeId)
+                }
+            }
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun ShowsResult(showsResult: ShowsUiState.Success) {
+private fun ShowsResult(showsResult: ShowsUiState.Success, watchedShowClick: (Int, Int) -> Unit) {
     val data = showsResult.result
-    LazyColumn {
-        items(items = data) {
-            Row(Modifier.animateItemPlacement()) {
-                NextEpisodeItem(it)
+    LazyColumn(
+        modifier = Modifier.padding(8.dp)
+    ) {
+        items(items = data, key = { it.showId }) {
+            Row {
+                NextEpisodeItem(it, watchedShowClick)
             }
         }
     }
@@ -59,40 +67,58 @@ private fun ShowsResult(showsResult: ShowsUiState.Success) {
 @Preview
 @Composable
 private fun NextEpisodeItem(
-    nextEpisode: NextEpisodeModel = NextEpisodeModel("Show Name", 1, 2, "Episode Name", ""),
-    watchedShowClick: () -> Unit = {}
+    nextEpisode: NextEpisodeModel = NextEpisodeModel("Show Name", 1, 2, "Episode Name", "", 1, 2),
+    watchedShowClick: (Int, Int) -> Unit = { _, _ -> }
 ) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
+    AnimatedContent(
+        targetState = nextEpisode,
+        transitionSpec = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.End,
+                animationSpec = tween(600)
+            ) togetherWith
+                    slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.End,
+                        animationSpec = tween(600)
+                    )
+        },
+        contentAlignment = Alignment.Center,
+        label = ""
+    ) { targetState ->
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
         ) {
-            AsyncImage(
-                modifier = Modifier.width(100.dp),
-                model = nextEpisode.image,
-                placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = "",
-                error = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentScale = ContentScale.FillWidth
-            )
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(modifier = Modifier.padding(bottom = 8.dp), text = nextEpisode.showName)
-                Text(text = "${nextEpisode.season}x${nextEpisode.episodeInSeason}")
-                Text(text = nextEpisode.episodeName)
-            }
-            IconButton(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                onClick = { }
-            ) {
-                Icon(imageVector = Icons.Default.Check, contentDescription = "add")
+                AsyncImage(
+                    modifier = Modifier.width(100.dp),
+                    model = targetState.image,
+                    placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
+                    contentDescription = "",
+                    error = painterResource(id = R.drawable.ic_launcher_foreground),
+                    contentScale = ContentScale.FillWidth
+                )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 16.dp)
+                ) {
+                    Text(modifier = Modifier.padding(bottom = 8.dp), text = targetState.showName)
+                    Text(text = "${targetState.season}x${targetState.episodeInSeason}")
+                    Text(text = targetState.episodeName)
+                }
+                IconButton(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    onClick = {
+                        watchedShowClick(targetState.showId, targetState.episodeId)
+                    }
+                ) {
+                    Icon(imageVector = Icons.Default.Check, contentDescription = "add")
+                }
             }
         }
     }
