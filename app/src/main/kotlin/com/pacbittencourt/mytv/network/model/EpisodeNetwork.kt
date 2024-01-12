@@ -14,7 +14,7 @@ data class EpisodeNetwork(
     @SerialName("number")
     val number: Int,
     @SerialName("summary")
-    val summary: String,
+    val summary: String?,
     @SerialName("runtime")
     val runtime: Int,
     @SerialName("image")

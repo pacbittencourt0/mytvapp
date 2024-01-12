@@ -13,7 +13,7 @@ data class EpisodeEntity(
     val watched: Boolean = false,
     val season: Int,
     val episodeInSeason: Int,
-    val summary: String,
+    val summary: String?,
     val imageUrl: String?,
     val showId: Int
 )
