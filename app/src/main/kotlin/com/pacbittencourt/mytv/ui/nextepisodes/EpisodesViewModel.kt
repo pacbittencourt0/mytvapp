@@ -26,7 +26,7 @@ class EpisodesViewModel @Inject constructor(
         .map {
             when (it) {
                 is Result.Error -> ShowsUiState.Failed
-                is Result.Loading -> ShowsUiState.Failed
+                is Result.Loading -> ShowsUiState.Loading
                 is Result.Success -> {
                     if (it.data.isEmpty()) {
                         ShowsUiState.Empty

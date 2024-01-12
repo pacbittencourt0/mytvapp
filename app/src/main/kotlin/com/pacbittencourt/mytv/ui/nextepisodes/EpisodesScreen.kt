@@ -4,8 +4,10 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -14,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -40,13 +43,22 @@ fun EpisodesScreen(
         when (showsResult) {
             ShowsUiState.Empty -> {}
             ShowsUiState.Failed -> {}
-            ShowsUiState.Loading -> {}
+            ShowsUiState.Loading -> {
+                Loading()
+            }
             is ShowsUiState.Success -> {
                 ShowsResult(showsResult as ShowsUiState.Success) { showId, episodeId ->
                     viewModel.markEpisodeAsWatched(showId, episodeId)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun Loading() {
+    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+        CircularProgressIndicator()
     }
 }
 
