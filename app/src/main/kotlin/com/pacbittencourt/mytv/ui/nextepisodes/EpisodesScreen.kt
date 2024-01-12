@@ -26,8 +26,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -39,17 +44,16 @@ fun EpisodesScreen(
     viewModel: EpisodesViewModel = hiltViewModel()
 ) {
     val showsResult by viewModel.showsResult.collectAsState()
-    Column {
-        when (showsResult) {
-            ShowsUiState.Empty -> {}
-            ShowsUiState.Failed -> {}
-            ShowsUiState.Loading -> {
-                Loading()
-            }
-            is ShowsUiState.Success -> {
-                ShowsResult(showsResult as ShowsUiState.Success) { showId, episodeId ->
-                    viewModel.markEpisodeAsWatched(showId, episodeId)
-                }
+    when (showsResult) {
+        ShowsUiState.Empty -> {}
+        ShowsUiState.Failed -> {}
+        ShowsUiState.Loading -> {
+            Loading()
+        }
+
+        is ShowsUiState.Success -> {
+            ShowsResult(showsResult as ShowsUiState.Success) { showId, episodeId ->
+                viewModel.markEpisodeAsWatched(showId, episodeId)
             }
         }
     }
@@ -57,26 +61,51 @@ fun EpisodesScreen(
 
 @Composable
 private fun Loading() {
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         CircularProgressIndicator()
     }
+}
+
+@Preview(showSystemUi = true, showBackground = true)
+@Composable
+fun Spreview() {
+    ShowsResult(showsResult = ShowsUiState.Success(
+        listOf(
+            NextEpisodeModel(
+                "Show", 1, 2, "acb", "", 1, 1
+            )
+        )
+    ), watchedShowClick = { a, b ->
+
+    })
 }
 
 @Composable
 private fun ShowsResult(showsResult: ShowsUiState.Success, watchedShowClick: (Int, Int) -> Unit) {
     val data = showsResult.result
-    LazyColumn(
-        modifier = Modifier.padding(8.dp)
-    ) {
-        items(items = data, key = { it.showId }) {
-            Row {
-                NextEpisodeItem(it, watchedShowClick)
+    Column {
+        Text(
+            modifier = Modifier
+                .padding(12.dp)
+                .align(Alignment.CenterHorizontally),
+            text = "What to watch next?",
+            fontSize = TextUnit(24f, TextUnitType.Sp),
+            fontWeight = FontWeight.Bold,
+            color = colorResource(id = R.color.purple_700),
+            fontFamily = FontFamily.Serif
+        )
+        LazyColumn(
+            modifier = Modifier.padding(horizontal = 8.dp)
+        ) {
+            items(items = data, key = { it.showId }) {
+                Row {
+                    NextEpisodeItem(it, watchedShowClick)
+                }
             }
         }
     }
 }
 
-@Preview
 @Composable
 private fun NextEpisodeItem(
     nextEpisode: NextEpisodeModel = NextEpisodeModel("Show Name", 1, 2, "Episode Name", "", 1, 2),
@@ -100,7 +129,7 @@ private fun NextEpisodeItem(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .padding(vertical = 8.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
