@@ -4,17 +4,20 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.rounded.WarningAmber
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -30,7 +33,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -45,8 +47,14 @@ fun EpisodesScreen(
 ) {
     val showsResult by viewModel.showsResult.collectAsState()
     when (showsResult) {
-        ShowsUiState.Empty -> {}
-        ShowsUiState.Failed -> {}
+        ShowsUiState.Empty -> {
+            Empty()
+        }
+
+        ShowsUiState.Failed -> {
+            Failed()
+        }
+
         ShowsUiState.Loading -> {
             Loading()
         }
@@ -60,24 +68,51 @@ fun EpisodesScreen(
 }
 
 @Composable
+fun Failed() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val textStyle = androidx.compose.material3.LocalTextStyle.current.copy(
+            fontSize = TextUnit(16f, TextUnitType.Sp),
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Bold,
+        )
+        Icon(
+            modifier = Modifier.size(96.dp),
+            imageVector = Icons.Rounded.WarningAmber,
+            contentDescription = "warning",
+            tint = colorResource(id = R.color.warning_orange)
+        )
+        Text(text = "Alguma coisa deu errado", style = textStyle)
+        Text(text = "Tente novamente mais tarde", style = textStyle)
+    }
+}
+
+@Composable
+fun Empty() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val textStyle = androidx.compose.material3.LocalTextStyle.current.copy(
+            fontSize = TextUnit(16f, TextUnitType.Sp),
+            fontFamily = FontFamily.SansSerif,
+            color = colorResource(id = R.color.purple_700),
+            fontWeight = FontWeight.Bold,
+        )
+        Text(text = "Você não adicionou nenhuma série ainda!", style = textStyle)
+        Text(text = "Vá para a busca e adicione sua primeira série!", style = textStyle)
+    }
+}
+
+@Composable
 private fun Loading() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         CircularProgressIndicator()
     }
-}
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun Spreview() {
-    ShowsResult(showsResult = ShowsUiState.Success(
-        listOf(
-            NextEpisodeModel(
-                "Show", 1, 2, "acb", "", 1, 1
-            )
-        )
-    ), watchedShowClick = { a, b ->
-
-    })
 }
 
 @Composable
