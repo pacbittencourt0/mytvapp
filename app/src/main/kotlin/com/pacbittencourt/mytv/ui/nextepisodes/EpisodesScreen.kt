@@ -4,22 +4,16 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.rounded.WarningAmber
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -40,6 +34,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.pacbittencourt.mytv.R
 import com.pacbittencourt.mytv.data.model.NextEpisodeModel
+import com.pacbittencourt.mytv.ui.components.EmptyState
+import com.pacbittencourt.mytv.ui.components.FailedState
+import com.pacbittencourt.mytv.ui.components.LoadingState
 
 @Composable
 fun EpisodesScreen(
@@ -48,15 +45,18 @@ fun EpisodesScreen(
     val showsResult by viewModel.showsResult.collectAsState()
     when (showsResult) {
         ShowsUiState.Empty -> {
-            Empty()
+            EmptyState(listOf(
+                "Você não adicionou nenhuma série ainda!",
+                "Vá para a busca e adicione sua primeira série!"
+            ))
         }
 
         ShowsUiState.Failed -> {
-            Failed()
+            FailedState()
         }
 
         ShowsUiState.Loading -> {
-            Loading()
+            LoadingState()
         }
 
         is ShowsUiState.Success -> {
@@ -64,54 +64,6 @@ fun EpisodesScreen(
                 viewModel.markEpisodeAsWatched(showId, episodeId)
             }
         }
-    }
-}
-
-@Composable
-fun Failed() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        val textStyle = androidx.compose.material3.LocalTextStyle.current.copy(
-            fontSize = TextUnit(16f, TextUnitType.Sp),
-            fontFamily = FontFamily.SansSerif,
-            fontWeight = FontWeight.Bold,
-        )
-        Icon(
-            modifier = Modifier.size(96.dp),
-            imageVector = Icons.Rounded.WarningAmber,
-            contentDescription = "warning",
-            tint = colorResource(id = R.color.warning_orange)
-        )
-        Text(text = "Alguma coisa deu errado", style = textStyle)
-        Text(text = "Tente novamente mais tarde", style = textStyle)
-    }
-}
-
-@Composable
-fun Empty() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        val textStyle = androidx.compose.material3.LocalTextStyle.current.copy(
-            fontSize = TextUnit(16f, TextUnitType.Sp),
-            fontFamily = FontFamily.SansSerif,
-            color = colorResource(id = R.color.purple_700),
-            fontWeight = FontWeight.Bold,
-        )
-        Text(text = "Você não adicionou nenhuma série ainda!", style = textStyle)
-        Text(text = "Vá para a busca e adicione sua primeira série!", style = textStyle)
-    }
-}
-
-@Composable
-private fun Loading() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator()
     }
 }
 
