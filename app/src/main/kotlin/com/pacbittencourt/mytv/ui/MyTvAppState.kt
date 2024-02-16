@@ -8,9 +8,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navOptions
 import androidx.tracing.trace
 import com.pacbittencourt.mytv.navigation.TopLevelDestination
+import com.pacbittencourt.mytv.ui.nextepisodes.navigateToTvShows
 import com.pacbittencourt.mytv.ui.profile.navigateToProfile
 import com.pacbittencourt.mytv.ui.search.navigateToSearch
-import com.pacbittencourt.mytv.ui.tvshows.navigateToTvShows
 
 class MyTvAppState(
     val navController: NavHostController
@@ -37,7 +37,7 @@ class MyTvAppState(
             }
 
             when (destination) {
-                TopLevelDestination.TV_SHOWS -> navController.navigateToTvShows(topLevelNavOptions)
+                TopLevelDestination.EPISODES -> navController.navigateToTvShows(topLevelNavOptions)
                 TopLevelDestination.SEARCH -> navController.navigateToSearch(topLevelNavOptions)
                 TopLevelDestination.PROFILE -> navController.navigateToProfile(topLevelNavOptions)
             }

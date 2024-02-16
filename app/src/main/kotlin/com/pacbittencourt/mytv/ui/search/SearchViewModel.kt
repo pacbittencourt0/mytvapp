@@ -6,7 +6,8 @@ import com.pacbittencourt.mytv.core.Result
 import com.pacbittencourt.mytv.core.asResult
 import com.pacbittencourt.mytv.data.model.ShowModel
 import com.pacbittencourt.mytv.data.repository.SearchRepository
-import com.pacbittencourt.mytv.data.repository.ShowRepository
+import com.pacbittencourt.mytv.domain.AddTvShowUseCase
+import com.pacbittencourt.mytv.domain.RemoveShowUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchRepository: SearchRepository,
-    private val showRepository: ShowRepository
+    private val addTvShowUseCase: AddTvShowUseCase,
+    private val removeShowUseCase: RemoveShowUseCase
 ) : ViewModel() {
 
     private val searchQuery: MutableStateFlow<String> = MutableStateFlow("")
@@ -36,7 +38,8 @@ class SearchViewModel @Inject constructor(
                         is Result.Error -> SearchUiState.Failed
                         is Result.Loading -> SearchUiState.Loading
                         is Result.Success -> {
-                            if (it.data.isEmpty()) SearchUiState.Empty
+                            if (it.data.isEmpty())
+                                SearchUiState.Empty
                             else
                                 SearchUiState.Success(it.data)
 
@@ -59,9 +62,9 @@ class SearchViewModel @Inject constructor(
     fun handleShowInWatchList(show: ShowModel) {
         viewModelScope.launch {
             if (show.isAdded) {
-                showRepository.removeShowFromWatch(show.id)
+                removeShowUseCase.invoke(show.id)
             } else {
-                showRepository.insertShowToWatch(show)
+                addTvShowUseCase.invoke(show)
             }
         }
     }

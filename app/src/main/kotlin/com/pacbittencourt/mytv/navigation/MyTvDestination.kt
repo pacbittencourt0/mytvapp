@@ -12,7 +12,7 @@ enum class TopLevelDestination(
     val label: Int,
     val contentDesc: String,
 ) {
-    TV_SHOWS(
+    EPISODES(
         icon = Icons.Sharp.Tv,
         label = R.string.bottom_menu_tv_shows,
         contentDesc = "tv shows"

@@ -10,7 +10,7 @@ import com.pacbittencourt.mytv.database.model.ShowEntity
 interface ShowDao {
 
     @Insert
-    suspend fun insertShow(show: ShowEntity)
+    suspend fun insertShow(vararg show: ShowEntity)
 
     @Query("SELECT * FROM show WHERE id = :id")
     suspend fun getShowById(id: Int): ShowEntity?
