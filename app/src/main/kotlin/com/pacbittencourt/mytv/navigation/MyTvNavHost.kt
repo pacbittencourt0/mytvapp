@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.pacbittencourt.mytv.ui.nextepisodes.tvShowsScreen
-import com.pacbittencourt.mytv.ui.profile.profileScreen
+import com.pacbittencourt.mytv.ui.about.aboutScreen
 import com.pacbittencourt.mytv.ui.search.searchRoute
 import com.pacbittencourt.mytv.ui.search.searchScreen
 
@@ -14,6 +14,6 @@ fun MyTvNavHost(navController: NavHostController, modifier: Modifier) {
     NavHost(modifier = modifier, navController = navController, startDestination = searchRoute) {
         tvShowsScreen()
         searchScreen()
-        profileScreen()
+        aboutScreen()
     }
 }

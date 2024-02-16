@@ -8,8 +8,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navOptions
 import androidx.tracing.trace
 import com.pacbittencourt.mytv.navigation.TopLevelDestination
+import com.pacbittencourt.mytv.ui.about.navigateToAbout
 import com.pacbittencourt.mytv.ui.nextepisodes.navigateToTvShows
-import com.pacbittencourt.mytv.ui.profile.navigateToProfile
 import com.pacbittencourt.mytv.ui.search.navigateToSearch
 
 class MyTvAppState(
@@ -39,7 +39,7 @@ class MyTvAppState(
             when (destination) {
                 TopLevelDestination.EPISODES -> navController.navigateToTvShows(topLevelNavOptions)
                 TopLevelDestination.SEARCH -> navController.navigateToSearch(topLevelNavOptions)
-                TopLevelDestination.PROFILE -> navController.navigateToProfile(topLevelNavOptions)
+                TopLevelDestination.ABOUT -> navController.navigateToAbout(topLevelNavOptions)
             }
         }
     }
