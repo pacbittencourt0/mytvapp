@@ -95,7 +95,7 @@ private fun ShowsResult(showsResult: ShowsUiState.Success, watchedShowClick: (In
 
 @Composable
 private fun NextEpisodeItem(
-    nextEpisode: NextEpisodeModel = NextEpisodeModel("Show Name", 1, 2, "Episode Name", "", 1, 2),
+    nextEpisode: NextEpisodeModel = NextEpisodeModel("Show Name", "01", "02", "Episode Name", "", 1, 2),
     watchedShowClick: (Int, Int) -> Unit = { _, _ -> }
 ) {
     AnimatedContent(
