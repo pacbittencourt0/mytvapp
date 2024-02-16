@@ -3,4 +3,20 @@
     <string name="bottom_menu_search">Search</string>
     <string name="bottom_menu_tv_shows">TV Shows</string>
     <string name="bottom_menu_about">About</string>
+
+    <string name="app_version">Version %1$s</string>
+    <string name="app_datasource_label">Show API Data:&#160;</string>
+    <string name="app_datasource_value">TV Maze API</string>
+    <string name="app_datasource_url">https://www.tvmaze.com</string>
+
+    <string name="states_something_wrong">Something went wrong</string>
+    <string name="states_try_again">Try again later</string>
+
+    <string name="episodes_no_show_yet">You haven\'t added any series yet!</string>
+    <string name="episodes_go_to_search">Go to search and add your first series!</string>
+    <string name="episodes_watch_next">WATCH LIST</string>
+
+    <string name="search_searchbar_hint">Search</string>
+    <string name="search_no_results">No results were found!</string>
+    <string name="search_search_your_shows">Search and add your favorite series!</string>
 </resources>

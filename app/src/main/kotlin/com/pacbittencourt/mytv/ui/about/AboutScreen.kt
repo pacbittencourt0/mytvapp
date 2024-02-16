@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.pacbittencourt.mytv.BuildConfig
+import com.pacbittencourt.mytv.R
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
@@ -30,21 +32,27 @@ fun AboutScreen() {
     ) {
         val version = BuildConfig.VERSION_NAME
         Text(
-            text = "Version $version",
+            text = stringResource(id = R.string.app_version, version),
             fontWeight = FontWeight.Bold
         )
         Row {
             val tvMaze = buildAnnotatedString {
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Datasource: ")
+                    append(stringResource(id = R.string.app_datasource_label))
                 }
-                withStyle(style = SpanStyle(color = Color.Blue, textDecoration = TextDecoration.Underline)) {
-                    append("TV Maze API")
+                withStyle(
+                    style = SpanStyle(
+                        color = Color.Blue,
+                        textDecoration = TextDecoration.Underline
+                    )
+                ) {
+                    append(stringResource(id = R.string.app_datasource_value))
                 }
             }
             val uriHandler = LocalUriHandler.current
+            val url = stringResource(id = R.string.app_datasource_url)
             ClickableText(text = tvMaze, style = LocalTextStyle.current, onClick = {
-                uriHandler.openUri("https://www.tvmaze.com")
+                uriHandler.openUri(url)
             })
         }
     }

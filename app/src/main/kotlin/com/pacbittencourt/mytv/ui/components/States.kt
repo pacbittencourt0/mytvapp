@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
@@ -32,7 +33,7 @@ fun EmptyState(messages: List<String>) {
         val textStyle = LocalTextStyle.current.copy(
             fontSize = TextUnit(16f, TextUnitType.Sp),
             fontFamily = FontFamily.SansSerif,
-            color = colorResource(id = R.color.purple_700),
+            color = colorResource(id = R.color.blue_700),
             fontWeight = FontWeight.Bold,
         )
         for (message in messages) {
@@ -59,8 +60,8 @@ fun FailedState() {
             contentDescription = "warning",
             tint = colorResource(id = R.color.warning_orange)
         )
-        Text(text = "Alguma coisa deu errado", style = textStyle)
-        Text(text = "Tente novamente mais tarde", style = textStyle)
+        Text(text = stringResource(R.string.states_something_wrong), style = textStyle)
+        Text(text = stringResource(R.string.states_try_again), style = textStyle)
     }
 }
 

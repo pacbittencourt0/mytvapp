@@ -1,6 +1,6 @@
-package com.pacbittencourt.mytv
+package com.pacbittencourt.mytv.util
 
-object Util {
+object StringUtils {
     fun addZeroLeft(number: Int): String {
         if (number in 1..9) {
             return "0$number"

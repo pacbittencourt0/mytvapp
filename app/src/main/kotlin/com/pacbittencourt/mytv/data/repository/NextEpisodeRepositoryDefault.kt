@@ -1,6 +1,6 @@
 package com.pacbittencourt.mytv.data.repository
 
-import com.pacbittencourt.mytv.Util.addZeroLeft
+import com.pacbittencourt.mytv.util.StringUtils.addZeroLeft
 import com.pacbittencourt.mytv.data.model.NextEpisodeModel
 import com.pacbittencourt.mytv.database.dao.EpisodeDao
 import com.pacbittencourt.mytv.database.dao.NextDao
