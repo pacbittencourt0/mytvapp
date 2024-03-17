@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,25 +13,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -73,28 +72,29 @@ fun EpisodesScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ShowsResult(showsResult: ShowsUiState.Success, watchedShowClick: (Int, Int) -> Unit) {
     val data = showsResult.result
-    Column(modifier = Modifier.padding(8.dp)) {
+    Column {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
+                .background(MaterialTheme.colorScheme.primary)
+                .padding(horizontal = 18.dp, vertical = 6.dp),
+            text = stringResource(R.string.episodes_watch_next),
+            fontSize = TextUnit(12f, TextUnitType.Sp),
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onPrimary
+        )
         LazyColumn(
-            modifier = Modifier.padding(horizontal = 8.dp),
+            modifier = Modifier.padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            item {
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .background(colorResource(id = R.color.blue_500), shape = CircleShape)
-                        .padding(horizontal = 18.dp, vertical = 6.dp),
-                    text = stringResource(R.string.episodes_watch_next),
-                    fontSize = TextUnit(12f, TextUnitType.Sp),
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                )
-            }
             items(items = data, key = { it.showId }) {
-                Row {
+                Row(modifier = Modifier.animateItemPlacement()) {
                     NextEpisodeItem(it, watchedShowClick)
                 }
             }
@@ -125,10 +125,7 @@ private fun NextEpisodeItem(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = colorResource(id = R.color.card_item_next_episode_color)
-            )
+                .padding(vertical = 8.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -147,9 +144,16 @@ private fun NextEpisodeItem(
                         .weight(1f)
                         .padding(start = 16.dp)
                 ) {
-                    Text(modifier = Modifier.padding(bottom = 8.dp), text = targetState.showName)
-                    Text(text = "${targetState.season}x${targetState.episodeInSeason}")
-                    Text(text = targetState.episodeName)
+                    Text(
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        text = targetState.showName,
+                    )
+                    Text(
+                        text = "${targetState.season}x${targetState.episodeInSeason}",
+                    )
+                    Text(
+                        text = targetState.episodeName,
+                    )
                 }
                 IconButton(
                     modifier = Modifier.padding(horizontal = 8.dp),
@@ -157,7 +161,10 @@ private fun NextEpisodeItem(
                         watchedShowClick(targetState.showId, targetState.episodeId)
                     }
                 ) {
-                    Icon(imageVector = Icons.Default.Check, contentDescription = "add")
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "add",
+                    )
                 }
             }
         }
