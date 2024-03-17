@@ -14,4 +14,7 @@ interface NextDao {
 
     @Query("SELECT * FROM next_episode")
     fun getAll(): Flow<List<NextEntity>>
+
+    @Query("DELETE FROM next_episode WHERE showId = :showId")
+    fun deleteNext(showId: Int)
 }

@@ -15,8 +15,12 @@ class EpisodeRepositoryDefault @Inject constructor(
                 val filteredList = list
                     .filter { it.id > episodeId }
                     .sortedBy { it.id }
-                val nextEpisode = filteredList.first()
-                nextDao.insertNext(NextEntity(showId, nextEpisode.id))
+                if (filteredList.isNotEmpty()) {
+                    val nextEpisode = filteredList.first()
+                    nextDao.insertNext(NextEntity(showId, nextEpisode.id))
+                } else {
+                    nextDao.deleteNext(showId)
+                }
             }
         }
     }

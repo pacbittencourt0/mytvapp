@@ -1,5 +1,6 @@
 package com.pacbittencourt.mytv.data.repository
 
+import com.pacbittencourt.mytv.util.StringUtils.addZeroLeft
 import com.pacbittencourt.mytv.data.model.NextEpisodeModel
 import com.pacbittencourt.mytv.database.dao.EpisodeDao
 import com.pacbittencourt.mytv.database.dao.NextDao
@@ -23,8 +24,8 @@ class NextEpisodeRepositoryDefault @Inject constructor(
                     nextEpisodeList.add(
                         NextEpisodeModel(
                             showName = show.name,
-                            season = epi.season,
-                            episodeInSeason = epi.episodeInSeason,
+                            season = addZeroLeft(epi.season),
+                            episodeInSeason = addZeroLeft(epi.episodeInSeason),
                             episodeName = epi.name,
                             image = show.imageMediumUrl,
                             showId = show.id,

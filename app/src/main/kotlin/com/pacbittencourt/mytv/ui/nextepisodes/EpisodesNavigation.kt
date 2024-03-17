@@ -11,8 +11,8 @@ fun NavController.navigateToTvShows(navOptions: NavOptions? = null) {
     this.navigate(episodesRoute, navOptions)
 }
 
-fun NavGraphBuilder.tvShowsScreen() {
+fun NavGraphBuilder.tvShowsScreen(viewModel: EpisodesViewModel) {
     composable(route = episodesRoute) {
-        EpisodesScreen()
+        EpisodesScreen(viewModel)
     }
 }

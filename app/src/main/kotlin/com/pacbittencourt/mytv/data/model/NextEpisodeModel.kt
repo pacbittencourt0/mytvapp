@@ -2,8 +2,8 @@ package com.pacbittencourt.mytv.data.model
 
 data class NextEpisodeModel(
     val showName: String,
-    val season: Int,
-    val episodeInSeason: Int,
+    val season: String,
+    val episodeInSeason: String,
     val episodeName: String,
     val image: String,
     val showId: Int,

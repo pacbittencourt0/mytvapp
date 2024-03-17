@@ -31,12 +31,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -52,7 +52,6 @@ import com.pacbittencourt.mytv.ui.components.EmptyState
 import com.pacbittencourt.mytv.ui.components.FailedState
 import com.pacbittencourt.mytv.ui.components.LoadingState
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
@@ -78,7 +77,7 @@ fun SearchScreen(
                 searchQuery = it
             },
             label = {
-                Text(text = "Search TV Shows")
+                Text(text = stringResource(R.string.search_searchbar_hint))
             },
             maxLines = 1,
             singleLine = true,
@@ -89,7 +88,7 @@ fun SearchScreen(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
         )
         when (searchResult) {
-            is SearchUiState.Empty -> EmptyState(messages = listOf("Nenhum resultado encontrado!"))
+            is SearchUiState.Empty -> EmptyState(messages = listOf(stringResource(R.string.search_no_results)))
             is SearchUiState.Idle -> IdleState()
             is SearchUiState.Loading -> LoadingState()
             is SearchUiState.Failed -> FailedState()
@@ -116,9 +115,9 @@ fun IdleState() {
             modifier = Modifier.size(96.dp),
             imageVector = Icons.Rounded.Search,
             contentDescription = "search icon",
-            tint = colorResource(id = R.color.purple_700)
+            tint = colorResource(id = R.color.blue_700)
         )
-        Text(text = "Procure e adicione suas séries favoritas!", style = textStyle)
+        Text(text = stringResource(R.string.search_search_your_shows), style = textStyle)
     }
 }
 
