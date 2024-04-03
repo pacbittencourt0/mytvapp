@@ -34,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -115,7 +114,6 @@ fun IdleState() {
             modifier = Modifier.size(96.dp),
             imageVector = Icons.Rounded.Search,
             contentDescription = "search icon",
-            tint = colorResource(id = R.color.blue_700)
         )
         Text(text = stringResource(R.string.search_search_your_shows), style = textStyle)
     }
@@ -154,9 +152,9 @@ private fun SearchResultItem(
             AsyncImage(
                 modifier = Modifier.width(100.dp),
                 model = show.imageMediumUrl,
-                placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
+                placeholder = painterResource(id = R.drawable.baseline_tv_off_24),
                 contentDescription = "",
-                error = painterResource(id = R.drawable.ic_launcher_foreground),
+                error = painterResource(id = R.drawable.baseline_tv_off_24),
                 contentScale = ContentScale.FillWidth
             )
             Text(

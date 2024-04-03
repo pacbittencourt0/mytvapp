@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +17,6 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -81,13 +79,11 @@ private fun ShowsResult(showsResult: ShowsUiState.Success, watchedShowClick: (In
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
-                .background(MaterialTheme.colorScheme.primary)
                 .padding(horizontal = 18.dp, vertical = 6.dp),
             text = stringResource(R.string.episodes_watch_next),
             fontSize = TextUnit(12f, TextUnitType.Sp),
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onPrimary
+            textAlign = TextAlign.Center
         )
         LazyColumn(
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -134,9 +130,9 @@ private fun NextEpisodeItem(
                 AsyncImage(
                     modifier = Modifier.width(100.dp),
                     model = targetState.image,
-                    placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
+                    placeholder = painterResource(id = R.drawable.baseline_tv_off_24),
                     contentDescription = "",
-                    error = painterResource(id = R.drawable.ic_launcher_foreground),
+                    error = painterResource(id = R.drawable.baseline_tv_off_24),
                     contentScale = ContentScale.FillWidth
                 )
                 Column(

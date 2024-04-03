@@ -5,9 +5,7 @@
     <string name="bottom_menu_about">About</string>
 
     <string name="app_version">Version %1$s</string>
-    <string name="app_datasource_label">Show API Data:&#160;</string>
-    <string name="app_datasource_value">TV Maze API</string>
-    <string name="app_datasource_url">https://www.tvmaze.com</string>
+    <string name="app_datasource_label">API data from: www.tvmaze.com</string>
 
     <string name="states_something_wrong">Something went wrong</string>
     <string name="states_try_again">Try again later</string>
