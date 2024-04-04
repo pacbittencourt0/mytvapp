@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -28,6 +27,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -121,14 +122,13 @@ private fun NextEpisodeItem(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .padding(bottom = 12.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 AsyncImage(
-                    modifier = Modifier.width(100.dp),
                     model = targetState.image,
                     placeholder = painterResource(id = R.drawable.baseline_tv_off_24),
                     contentDescription = "",
@@ -138,16 +138,22 @@ private fun NextEpisodeItem(
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = 16.dp)
+                        .padding(start = 12.dp, top = 12.dp, bottom = 12.dp)
                 ) {
                     Text(
+                        maxLines = 1,
                         modifier = Modifier.padding(bottom = 8.dp),
+                        overflow = TextOverflow.Ellipsis,
                         text = targetState.showName,
                     )
                     Text(
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         text = "${targetState.season}x${targetState.episodeInSeason}",
                     )
                     Text(
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         text = targetState.episodeName,
                     )
                 }
