@@ -1,7 +1,6 @@
 package com.pacbittencourt.mytv.ui.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +24,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -135,6 +133,7 @@ private fun SearchResult(searchResult: SearchUiState, onAddShowClick: (ShowModel
     LazyColumn {
         items(items = data.searchResults, key = { it.id }) {
             Column(Modifier.animateItemPlacement()) {
+                HorizontalDivider()
                 SearchResultItem(
                     show = it,
                     onAddShowClick = onAddShowClick
@@ -153,7 +152,6 @@ private fun SearchResultItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
