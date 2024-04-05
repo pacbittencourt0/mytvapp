@@ -1,7 +1,10 @@
 package com.pacbittencourt.mytv.ui.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,11 +19,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,33 +64,37 @@ fun SearchScreen(
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val searchResult by viewModel.searchResult.collectAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(all = 16.dp)
-    ) {
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            value = searchQuery,
-            trailingIcon = {
-                Icon(imageVector = Icons.Rounded.Search, contentDescription = "search")
-            },
-            onValueChange = {
-                searchQuery = it
-            },
-            label = {
-                Text(text = stringResource(R.string.search_searchbar_hint))
-            },
-            maxLines = 1,
-            singleLine = true,
-            keyboardActions = KeyboardActions(onSearch = {
-                viewModel.search(searchQuery)
-                keyboardController?.hide()
-            }),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
-        )
+    Column(modifier = modifier.fillMaxSize()) {
+        Box(modifier = Modifier.padding(4.dp)) {
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                value = searchQuery,
+                trailingIcon = {
+                    val icon =
+                        if (searchQuery.isEmpty()) Icons.Rounded.Search else Icons.Rounded.Close
+                    Icon(
+                        modifier = Modifier.clickable { searchQuery = "" },
+                        imageVector = icon,
+                        contentDescription = "search"
+                    )
+                },
+                onValueChange = {
+                    searchQuery = it
+                },
+                label = {
+                    Text(text = stringResource(R.string.search_searchbar_hint))
+                },
+                maxLines = 1,
+                singleLine = true,
+                keyboardActions = KeyboardActions(onSearch = {
+                    viewModel.search(searchQuery)
+                    keyboardController?.hide()
+                }),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
+            )
+        }
         when (searchResult) {
             is SearchUiState.Empty -> EmptyState(messages = listOf(stringResource(R.string.search_no_results)))
             is SearchUiState.Idle -> IdleState()
@@ -125,11 +134,12 @@ private fun SearchResult(searchResult: SearchUiState, onAddShowClick: (ShowModel
     val data = searchResult as SearchUiState.Success
     LazyColumn {
         items(items = data.searchResults, key = { it.id }) {
-            Row(Modifier.animateItemPlacement()) {
+            Column(Modifier.animateItemPlacement()) {
                 SearchResultItem(
                     show = it,
                     onAddShowClick = onAddShowClick
                 )
+                HorizontalDivider()
             }
         }
     }
@@ -140,47 +150,46 @@ private fun SearchResultItem(
     show: ShowModel,
     onAddShowClick: (ShowModel) -> Unit = {}
 ) {
-    Card(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(4.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            AsyncImage(
-                modifier = Modifier.width(100.dp),
-                model = show.imageMediumUrl,
-                placeholder = painterResource(id = R.drawable.baseline_tv_off_24),
-                contentDescription = "",
-                error = painterResource(id = R.drawable.baseline_tv_off_24),
-                contentScale = ContentScale.FillWidth
-            )
-            Text(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp),
-                text = show.name
-            )
-            var isAddedAux by remember { mutableStateOf(show.isAdded) }
-            val icon = if (isAddedAux) Icons.Default.Check else Icons.Default.Add
-            IconButton(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                onClick = {
-                    onAddShowClick(show)
-                    show.isAdded = !show.isAdded
-                    isAddedAux = show.isAdded
-                }
-            ) {
-                Icon(imageVector = icon, contentDescription = "add")
+        AsyncImage(
+            modifier = Modifier
+                .width(72.dp)
+                .padding(2.dp),
+            model = show.imageMediumUrl,
+            placeholder = painterResource(id = R.drawable.baseline_tv_off_24),
+            contentDescription = "",
+            error = painterResource(id = R.drawable.baseline_tv_off_24),
+            contentScale = ContentScale.FillWidth
+        )
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 12.dp),
+            text = show.name
+        )
+        var isAddedAux by remember { mutableStateOf(show.isAdded) }
+        val icon = if (isAddedAux) Icons.Default.Check else Icons.Default.Add
+        IconButton(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            onClick = {
+                onAddShowClick(show)
+                show.isAdded = !show.isAdded
+                isAddedAux = show.isAdded
             }
+        ) {
+            Icon(imageVector = icon, contentDescription = "add")
         }
     }
 }
 
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
+@Preview
 private fun PreviewItem() {
     SearchResultItem(
         show = ShowModel(1, "Show", "url", isAdded = false),
