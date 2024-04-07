@@ -10,17 +10,23 @@ class EpisodeRepositoryDefault @Inject constructor(
     private val nextDao: NextDao,
 ) : EpisodeRepository {
     override suspend fun markEpisodeWatched(showId: Int, episodeId: Int) {
-        episodeDao.getEpisodesFromShowById(showId).collect { list ->
-            if (list.isNotEmpty()) {
-                val filteredList = list
-                    .filter { it.id > episodeId }
-                    .sortedBy { it.id }
-                if (filteredList.isNotEmpty()) {
-                    val nextEpisode = filteredList.first()
+        val episode = episodeDao.getEpisodeById(episodeId)
+        episode?.copy(watched = true)?.let {
+            episodeDao.update(it)
+            var season = it.season
+            var epiNumber = it.episodeInSeason.plus(1)
+            var nextEpisode = episodeDao.getEpisodeByNumberInSeason(it.showId, season, epiNumber)
+            if (nextEpisode == null) {
+                season++
+                epiNumber = 1
+                nextEpisode = episodeDao.getEpisodeByNumberInSeason(it.showId, season, epiNumber)
+                if (nextEpisode != null) {
                     nextDao.insertNext(NextEntity(showId, nextEpisode.id))
                 } else {
                     nextDao.deleteNext(showId)
                 }
+            } else {
+                nextDao.insertNext(NextEntity(showId, nextEpisode.id))
             }
         }
     }

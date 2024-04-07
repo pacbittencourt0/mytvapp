@@ -16,7 +16,7 @@ data class EpisodeNetwork(
     @SerialName("summary")
     val summary: String?,
     @SerialName("runtime")
-    val runtime: Int,
+    val runtime: Int?,
     @SerialName("image")
     val images: ShowImages?,
     @SerialName("airstamp")
