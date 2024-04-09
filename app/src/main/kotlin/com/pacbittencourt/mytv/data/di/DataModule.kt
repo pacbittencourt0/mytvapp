@@ -1,13 +1,13 @@
 package com.pacbittencourt.mytv.data.di
 
 import com.pacbittencourt.mytv.data.repository.EpisodeRepository
-import com.pacbittencourt.mytv.data.repository.EpisodeRepositoryDefault
 import com.pacbittencourt.mytv.data.repository.NextEpisodeRepository
-import com.pacbittencourt.mytv.data.repository.NextEpisodeRepositoryDefault
 import com.pacbittencourt.mytv.data.repository.SearchRepository
-import com.pacbittencourt.mytv.data.repository.SearchRepositoryImpl
 import com.pacbittencourt.mytv.data.repository.ShowRepository
-import com.pacbittencourt.mytv.data.repository.ShowRepositoryDefault
+import com.pacbittencourt.mytv.data.repository.defaultimpl.EpisodeRepositoryDefault
+import com.pacbittencourt.mytv.data.repository.defaultimpl.NextEpisodeRepositoryDefault
+import com.pacbittencourt.mytv.data.repository.defaultimpl.SearchRepositoryImpl
+import com.pacbittencourt.mytv.data.repository.defaultimpl.ShowRepositoryDefault
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,7 +1,7 @@
 package com.pacbittencourt.mytv.data.repository
 
 import com.pacbittencourt.mytv.data.model.ShowModel
-import com.pacbittencourt.mytv.database.model.ShowEntity
+import com.pacbittencourt.mytv.data.source.local.model.ShowEntity
 
 interface ShowRepository {
     suspend fun insertShowToWatch(show: ShowModel)
